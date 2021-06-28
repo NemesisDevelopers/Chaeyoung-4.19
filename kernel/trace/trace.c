@@ -8085,6 +8085,7 @@ struct dentry *tracing_init_dentry(void)
 	if (tr->dir)
 		return NULL;
 
+#ifdef CONFIG_BLK_DEBUG_FS
 	if (WARN_ON(!tracefs_initialized()) ||
 		(IS_ENABLED(CONFIG_DEBUG_FS) &&
 		 WARN_ON(!debugfs_initialized())))
@@ -8098,6 +8099,7 @@ struct dentry *tracing_init_dentry(void)
 	 */
 	tr->dir = debugfs_create_automount("tracing", NULL,
 					   trace_automount, NULL);
+#endif
 	if (!tr->dir) {
 		pr_warn_once("Could not create debugfs directory 'tracing'\n");
 		return ERR_PTR(-ENOMEM);
