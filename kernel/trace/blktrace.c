@@ -486,8 +486,10 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
 	if (!buts->buf_size || !buts->buf_nr)
 		return -EINVAL;
 
+#ifdef CONFIG_DEBUG_FS
 	if (!blk_debugfs_root)
 		return -ENOENT;
+#endif
 
 	strncpy(buts->name, name, BLKTRACE_BDEV_SIZE);
 	buts->name[BLKTRACE_BDEV_SIZE - 1] = '\0';
@@ -532,8 +534,9 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
 	if (q->mq_ops && bdev && bdev == bdev->bd_contains)
 		dir = q->debugfs_dir;
 	else
-#endif
+
 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+#endif
 	if (!dir)
 		goto err;
 
