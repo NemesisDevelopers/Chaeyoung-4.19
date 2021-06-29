@@ -17,23 +17,23 @@
 #include <trace/events/power.h>
 #include <linux/sched/sysctl.h>
 
-static unsigned int default_efficient_freq_lp[] = {0};
-static u64 default_up_delay_lp[] = {0};
+static unsigned int default_efficient_freq_lp[] = {1305600};
+static u64 default_up_delay_lp[] = {100 * NSEC_PER_MSEC};
 
-static unsigned int default_efficient_freq_hp[] = {1766400};
+static unsigned int default_efficient_freq_hp[] = {1804800};
 static u64 default_up_delay_hp[] = {100 * NSEC_PER_MSEC};
 
-#define DEFAULT_RTG_BOOST_FREQ_LP 1000000
-#define DEFAULT_RTG_BOOST_FREQ_HP 0
+#define DEFAULT_RTG_BOOST_FREQ_LP 1017600
+#define DEFAULT_RTG_BOOST_FREQ_HP 1056000
 
-#define DEFAULT_HISPEED_LOAD_LP 90
-#define DEFAULT_HISPEED_LOAD_HP 90
+#define DEFAULT_HISPEED_LOAD_LP 99
+#define DEFAULT_HISPEED_LOAD_HP 99
 
-#define DEFAULT_HISPEED_FREQ_LP 0
-#define DEFAULT_HISPEED_FREQ_HP 0
+#define DEFAULT_HISPEED_FREQ_LP 99
+#define DEFAULT_HISPEED_FREQ_HP 99
 
-#define DEFAULT_PL_LP 1
-#define DEFAULT_PL_HP 1
+#define DEFAULT_PL_LP 0
+#define DEFAULT_PL_HP 0
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
