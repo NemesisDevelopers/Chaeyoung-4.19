@@ -3184,6 +3184,8 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 	 */
 	p->prio = current->normal_prio;
 
+	p->compensate_need = 0;
+	
 	uclamp_fork(p);
 
 	/*

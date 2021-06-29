@@ -824,6 +824,9 @@ struct task_struct {
 	unsigned int			flags;
 	unsigned int			ptrace;
 
+	int				compensate_time;
+	int 				compensate_need;
+	
 #ifdef CONFIG_SMP
 	struct llist_node		wake_entry;
 	int				on_cpu;
