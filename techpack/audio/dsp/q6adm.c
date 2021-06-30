@@ -3057,10 +3057,18 @@ int adm_open(int port_id, int path, int rate, int channel_mode, int topology,
 		 __func__, port_id, path, rate, channel_mode, perf_mode,
 		 topology);
 
-	if (path == ADM_PATH_PLAYBACK || app_type == APPTYPE_GENERAL_PLAYBACK ||
-	    app_type == APPTYPE_SYSTEM_SOUNDS) {
-		pr_info("%s: Force 24-bits audio for APPTYPE 0x%x\n", __func__, app_type);
+	if ((topology == ADM_CMD_COPP_OPENOPOLOGY_ID_SPEAKER_STEREO_AUDIO_COPP_SOMC_HP) &&
+		(app_type == APPTYPE_GENERAL_PLAYBACK)) {
 		bit_width = 24;
+		pr_debug("%s: Force open adm in 24-bit for SOMC HP topology 0x%x\n",
+			__func__, topology);
+	} else if (((topology == ADM_CMD_COPP_OPENOPOLOGY_ID_SPEAKER_RX_MCH_IIR_COPP_MBDRC_V3) ||
+		(topology == ADM_CMD_COPP_OPENOPOLOGY_ID_SPEAKER_RX_MCH_FIR_IIR_COPP_MBDRC_V3) ||
+		(topology == ADM_CMD_COPP_OPENOPOLOGY_ID_AUDIO_RX_SONY_SPEAKER)) &&
+		((app_type == APPTYPE_GENERAL_PLAYBACK) || (app_type == APPTYPE_SYSTEM_SOUNDS))) {
+		bit_width = 24;
+		pr_debug("%s: Force open adm in 24-bit for SOMC Speaker topology 0x%x\n",
+			__func__, topology);
 	}
 	
 	port_id = q6audio_convert_virtual_to_portid(port_id);

@@ -290,10 +290,12 @@ static void msm_pcm_routng_cfg_matrix_map_pp(struct route_payload payload,
 {
 	int itr = 0, rc = 0;
 
-	if ((path_type == ADM_PATH_PLAYBACK) &&
-	   ((perf_mode == LEGACY_PCM_MODE) ||
-	     (perf_mode == LOW_LATENCY_PCM_MODE)) &&
-	    is_custom_stereo_on) {
+	if ((path_type != ADM_PATH_PLAYBACK) ||
+	    ((perf_mode == LEGACY_PCM_MODE) ||
+	     (perf_mode == ULTRA_LOW_LATENCY_PCM_MODE)) &&
+		!is_custom_stereo_on)
+		return;
+		
 		for (itr = 0; itr < payload.num_copps; itr++) {
 			if ((payload.port_id[itr] != SLIMBUS_0_RX) &&
 			    (payload.port_id[itr] != RT_PROXY_PORT_001_RX)) {
@@ -304,15 +306,16 @@ static void msm_pcm_routng_cfg_matrix_map_pp(struct route_payload payload,
 				payload.port_id[itr],
 				payload.copp_idx[itr],
 				payload.session_id,
-				Q14_GAIN_ZERO_POINT_FIVE,
-				Q14_GAIN_ZERO_POINT_FIVE,
-				Q14_GAIN_ZERO_POINT_FIVE,
-				Q14_GAIN_ZERO_POINT_FIVE);
+				0,
+				Q14_GAIN_UNITY,
+				Q14_GAIN_UNITY,
+				0);
+						
+				
 			if (rc < 0)
 				pr_err("%s: err setting custom stereo\n",
 					__func__);
 		}
-	}
 }
 
 #define SLIMBUS_EXTPROC_RX AFE_PORT_INVALID
@@ -2036,8 +2039,8 @@ void msm_pcm_routing_dereg_phy_stream(int fedai_id, int stream_type)
 				 __func__, copp, fedai_id, session_type, i);
 			clear_bit(idx,
 				  &session_copp_map[fedai_id][session_type][i]);
-			if ((topology == DOLBY_ADM_COPP_TOPOLOGY_ID ||
-				topology == DS2_ADM_COPP_TOPOLOGY_ID) &&
+			if ((topology == DS2_ADM_COPP_TOPOLOGY_ID ||
+				topology == ADM_CMD_COPP_OPENOPOLOGY_ID_SPEAKER_STEREO_AUDIO_COPP_SOMC_HP) &&
 			    (fdai->perf_mode == LEGACY_PCM_MODE) &&
 			    (fdai->passthr_mode == LEGACY_PCM))
 				msm_pcm_routing_deinit_pp(port_id, topology);
